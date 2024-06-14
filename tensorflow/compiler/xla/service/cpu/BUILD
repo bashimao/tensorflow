@@ -12,6 +12,10 @@ load(
     "//tensorflow/tsl/mkl:build_defs.bzl",
     "mkl_deps",
 )
+load(
+    "//tensorflow/tsl/nvpl:build_defs.bzl",
+    "nvpl_deps",
+)
 load("//tensorflow/tsl:tsl.bzl", "tf_openmp_copts", "tsl_copts")
 load(
     "//third_party/compute_library:build_defs.bzl",
@@ -444,6 +448,7 @@ cc_library(
         ":runtime_matmul",
         ":runtime_matmul_acl",
         ":runtime_matmul_mkl",
+        ":runtime_matmul_nvpl",
         ":runtime_pow",
         ":runtime_single_threaded_conv2d",
         ":runtime_single_threaded_conv3d",
@@ -947,6 +952,19 @@ cc_library(
         "//third_party/eigen3",
     ] + mkl_deps(),
 )
+
+cc_library(
+    name = "runtime_matmul_nvpl",
+    srcs = [],
+    hdrs = [],
+    copts = runtime_copts(),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//tensorflow/compiler/xla:executable_run_options",
+        "//third_party/eigen3",
+    ] + nvpl_deps(),
+)
+
 
 cc_library(
     name = "runtime_matmul_acl",

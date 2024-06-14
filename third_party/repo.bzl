@@ -121,6 +121,7 @@ def tf_http_archive(name, sha256, urls, **kwargs):
         "mirror.tensorflow.org",
         "mirror.bazel.build",
         "storage.googleapis.com",
+        "developer.download.nvidia.com",
     )]):
         fail("The first entry of tf_http_archive(urls) must be a mirror " +
              "URL, preferrably mirror.tensorflow.org. Even if you don't have " +

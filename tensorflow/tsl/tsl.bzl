@@ -31,6 +31,11 @@ load(
     "if_mkldnn_openmp",
 )
 load(
+    "//tensorflow/tsl/nvpl:build_defs.bzl",
+    "if_enable_nvpl",
+    "if_nvpl",
+)
+load(
     "//third_party/compute_library:build_defs.bzl",
     "if_enable_acl",
 )

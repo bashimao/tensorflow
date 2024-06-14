@@ -455,6 +455,7 @@ bzl_library(
         "//third_party/compute_library:build_defs_bzl",
         "//third_party/mkl:build_defs_bzl",
         "//third_party/mkl_dnn:build_defs_bzl",
+        "//third_party/nvpl:build_defs_bzl",
         "@bazel_skylib//lib:new_sets",
         "@local_config_cuda//cuda:build_defs_bzl",
         "@local_config_rocm//rocm:build_defs_bzl",

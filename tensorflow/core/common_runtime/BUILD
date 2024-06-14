@@ -36,6 +36,10 @@ load(
     "if_mkl",
     "if_mkl_ml",
 )
+load(
+    "//third_party/nvpl:build_defs.bzl",
+    "if_nvpl",
+)
 
 default_package_visibility = [
     "//tensorflow:internal",
@@ -3146,6 +3150,9 @@ tf_cc_test_mkl(
         "//tensorflow/core/kernels/mkl:mkl_tfconv_op",
         "//tensorflow/core/kernels/mkl:mkl_transpose_op",
         "//tensorflow/core/kernels/mkl:mkl_tmp_bf16_ops",
+    ]) + if_nvpl([
+        "//tensorflow/core/kernels/nvpl:nvpl_identity_op",
+        "//tensorflow/core/kernels/nvpl:nvpl_matmul_op",
     ]),
 )
 

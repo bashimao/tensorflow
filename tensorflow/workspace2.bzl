@@ -208,6 +208,17 @@ def _tf_repositories():
     )
 
     tf_http_archive(
+        name = "nvpl",
+        build_file = "//third_party/nvpl:BUILD",
+        sha256 = "ba29f6a9d3831b6ae5c9265b4d124c13b9b9e0faea025359b02b41ad230975c2",
+        strip_prefix = "nvpl_blas-linux-sbsa-0.2.0.1-archive",
+        urls = [
+            "https://developer.download.nvidia.com/compute/nvpl/redist/nvpl_blas/linux-sbsa/nvpl_blas-linux-sbsa-0.2.0.1-archive.tar.xz",
+            "https://developer.download.nvidia.com/compute/nvpl/redist/nvpl_blas/linux-sbsa/nvpl_blas-linux-sbsa-0.2.0.1-archive.tar.xz",
+        ],
+    )
+
+    tf_http_archive(
         name = "compute_library",
         sha256 = "e20a060d3c4f803889d96c2f0b865004ba3ef4e228299a44339ea1c1ba827c85",
         strip_prefix = "ComputeLibrary-22.11",

@@ -16,6 +16,7 @@ load(
     "tf_cuda_only_cc_test",
     "tf_kernel_library",
     "tf_mkl_kernel_library",
+    "tf_nvpl_kernel_library",
 )
 load("//tensorflow:tensorflow.default.bzl", "filegroup", "get_compatible_with_portable", "tf_version_info_genrule")
 load(
@@ -162,6 +163,7 @@ filegroup(
         "mkl_threadpool.h",
         "mkl_util.h",
         "onednn_env_vars.h",
+        "nvpl_util.h",
         "overflow.h",
         "padding.h",
         "permutation_input_iterator.h",
@@ -305,6 +307,19 @@ filegroup(
     srcs = [
         "mkl_util_test.cc",
     ],
+    visibility = ["//tensorflow/core:__pkg__"],
+)
+
+filegroup(
+    name = "nvpl_util_hdrs",
+    srcs = ["nvpl_util.h"],
+    visibility = ["//tensorflow/core:__pkg__"],
+)
+
+filegroup(
+    name = "nvpl_util_test_srcs",
+    testonly = 1,
+    srcs = [],
     visibility = ["//tensorflow/core:__pkg__"],
 )
 

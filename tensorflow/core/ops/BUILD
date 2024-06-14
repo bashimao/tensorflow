@@ -18,6 +18,11 @@ load(
     "//third_party/mkl:build_defs.bzl",
     "if_mkl",
 )
+load(
+    "//third_party/nvpl:build_defs.bzl",
+    "if_nvpl",
+)
+
 
 # A lot of packages try to minimize binary size by depending on individual ops,\
 # so they need access here.
@@ -67,6 +72,7 @@ tf_gen_op_libs(
         "manip_ops",
         "math_ops",
         "mkl_nn_ops",
+        "nvpl_nn_ops",
         "nccl_ops",
         "nn_ops",
         "no_op",
@@ -143,6 +149,14 @@ tf_gen_op_libs(
 tf_gen_op_libs(
     op_lib_names = [
         "mkl_array_ops",
+    ],
+    sub_directory = "",
+    deps = ["//tensorflow/core:protos_all_cc"],
+)
+
+tf_gen_op_libs(
+    op_lib_names = [
+        "nvpl_array_ops",
     ],
     sub_directory = "",
     deps = ["//tensorflow/core:protos_all_cc"],
@@ -342,6 +356,9 @@ cc_library(
     }) + if_mkl([
         ":mkl_array_ops_op_lib",
         ":mkl_nn_ops_op_lib",
+    ]) + if_nvpl([
+        ":nvpl_array_ops_op_lib",
+        ":nvpl_nn_ops_op_lib",
     ]),
     alwayslink = 1,
 )
@@ -398,6 +415,8 @@ cc_library(
         ":nn_ops_op_lib",
     ] + if_mkl([
         ":mkl_nn_ops_op_lib",
+    ]) + if_nvpl([
+        ":nvpl_nn_ops_op_lib",
     ]),
     alwayslink = 1,
 )

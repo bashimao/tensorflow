@@ -8,10 +8,15 @@ load(
     "tf_copts",
     "tf_cuda_library",
     "tf_mkl_kernel_library",
+    "tf_nvpl_kernel_library",
 )
 load(
     "//third_party/mkl:build_defs.bzl",
     "if_mkl",
+)
+load(
+    "//third_party/nvpl:build_defs.bzl",
+    "if_nvpl",
 )
 
 package(
@@ -525,7 +530,7 @@ cc_library(
         "execute.h",
         "execute_node.h",
     ],
-    copts = if_mkl(["-DINTEL_MKL"]),
+    copts = if_mkl(["-DINTEL_MKL"]) + if_nvpl(["-DNVIDIA_PL"]),
     deps = [
         ":context",
         ":copy_to_device_node",

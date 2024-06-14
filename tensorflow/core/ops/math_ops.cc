@@ -967,6 +967,17 @@ REGISTER_OP("_MklMatMul")
     .SetShapeFn(shape_inference::MatMulShape);
 #endif  // INTEL_MKL
 
+#ifdef NVIDIA_PL
+REGISTER_OP("NvplMatMul")
+    .Input("a: T")
+    .Input("b: T")
+    .Output("product: T")
+    .Attr("transpose_a: bool = false")
+    .Attr("transpose_b: bool = false")
+    .Attr("T: {float} = DT_FLOAT")
+    .SetShapeFn(shape_inference::MatMulShape);
+#endif  // NVIDIA_PL
+
 REGISTER_OP("SparseMatMul")
     .Input("a: Ta")
     .Input("b: Tb")

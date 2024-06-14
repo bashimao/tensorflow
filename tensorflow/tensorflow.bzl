@@ -53,6 +53,11 @@ load(
     "if_mkldnn_openmp",
 )
 load(
+    "//third_party/nvpl:build_defs.bzl",
+    "if_enable_nvpl",
+    "if_nvpl",
+)
+load(
     "//third_party/compute_library:build_defs.bzl",
     "if_enable_acl",
 )
@@ -436,6 +441,7 @@ def tf_copts(
         if_mkldnn_aarch64_acl(["-DDNNL_AARCH64_USE_ACL=1"]) +
         if_mkldnn_aarch64_acl_openmp(["-DENABLE_ONEDNN_OPENMP"]) +
         if_zendnn(["-DAMD_ZENDNN"]) +
+        if_nvpl(["-DNVIDIA_PL"]) +
         if_enable_acl(["-DXLA_CPU_USE_ACL=1", "-fexceptions"]) +
         if_android_arm(["-mfpu=neon"]) +
         if_linux_x86_64(["-msse3"]) +
@@ -1766,6 +1772,46 @@ def tf_cc_test_mkl(
             features = disable_header_modules,
         )
 
+def tf_cc_test_nvpl(
+        srcs,
+        deps,
+        name = "",
+        data = [],
+        linkstatic = 0,
+        tags = [],
+        size = "medium",
+        kernels = [],
+        args = None):
+    # -fno-exceptions in nocopts breaks compilation if header modules are enabled.
+    disable_header_modules = ["-use_header_modules"]
+
+    for src in srcs:
+        cc_test(
+            name = src_to_test_name(src),
+            srcs = if_nvpl([src]) + tf_binary_additional_srcs(),
+            # Adding an explicit `-fexceptions` because `allow_exceptions = True`
+            # in `tf_copts` doesn't work internally.
+            copts = tf_copts() + ["-fexceptions"] + tf_openmp_copts(),
+            linkopts = select({
+                clean_dep("//tensorflow:android"): [
+                    "-pie",
+                ],
+                clean_dep("//tensorflow:windows"): [],
+                "//conditions:default": [
+                    "-lpthread",
+                    "-lm",
+                ],
+            }) + _rpath_linkopts(src_to_test_name(src)) + tf_openmp_lopts(),
+            deps = deps + tf_binary_dynamic_kernel_deps(kernels),
+            data = data + tf_binary_dynamic_kernel_dsos(),
+            exec_properties = tf_exec_properties({"tags": tags}),
+            linkstatic = linkstatic,
+            tags = tags,
+            size = size,
+            args = args,
+            features = disable_header_modules,
+        )
+
 def tf_gpu_cc_tests(
         srcs,
         deps,
@@ -2023,6 +2069,46 @@ def tf_mkl_kernel_library(
     cc_library(
         name = name,
         srcs = if_mkl(srcs),
+        hdrs = hdrs,
+        deps = deps,
+        linkopts = linkopts,
+        alwayslink = alwayslink,
+        copts = copts + if_override_eigen_strong_inline(["/DEIGEN_STRONG_INLINE=inline"]),
+        features = disable_header_modules,
+    )
+
+def tf_nvpl_kernel_library(
+        name,
+        prefix = None,
+        srcs = None,
+        hdrs = None,
+        deps = None,
+        alwayslink = 1,
+        copts = tf_copts() + ["-fexceptions"] + tf_openmp_copts(),
+        linkopts = tf_openmp_lopts()):
+    """A rule to build NVPL-based TensorFlow kernel libraries."""
+
+    if not bool(srcs):
+        srcs = []
+    if not bool(hdrs):
+        hdrs = []
+
+    if prefix:
+        srcs = srcs + native.glob(
+            [prefix + "*.cc"],
+            exclude = [prefix + "*test*"],
+        )
+        hdrs = hdrs + native.glob(
+            [prefix + "*.h"],
+            exclude = [prefix + "*test*"],
+        )
+
+    # -fno-exceptions in nocopts breaks compilation if header modules are enabled.
+    disable_header_modules = ["-use_header_modules"]
+
+    cc_library(
+        name = name,
+        srcs = if_nvpl(srcs),
         hdrs = hdrs,
         deps = deps,
         linkopts = linkopts,
@@ -3208,6 +3294,7 @@ def tf_python_pybind_static_deps(testonly = False):
         "@local_execution_config_platform//:__subpackages__",
         "@mkl_dnn_acl_compatible//:__subpackages__",
         "@mkl_dnn_v1//:__subpackages__",
+        "@nvpl//:__subpackages__",
         "@nsync//:__subpackages__",
         "@nccl_archive//:__subpackages__",
         "@org_sqlite//:__subpackages__",

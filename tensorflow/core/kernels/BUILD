@@ -31,6 +31,11 @@ load(
     "if_mkl",
     "mkl_deps",
 )
+load(
+    "//third_party/nvpl:build_defs.bzl",
+    "if_nvpl",
+    "nvpl_deps",
+)
 load("//tensorflow:tensorflow.default.bzl", "cc_header_only_library", "filegroup", "get_compatible_with_portable", "tf_cc_shared_library", "tf_cuda_cc_test", "tf_cuda_cc_tests", "tf_disable_ptxas_warning_flags", "tf_kernel_library")
 load(
     "//tensorflow/core/platform:build_config_root.bzl",
@@ -3425,7 +3430,7 @@ tf_kernel_library(
         "//tensorflow/tsl/framework/contraction:eigen_contraction_kernel",
         ":fused_eigen_output_kernels",
         ":loose_headers",
-    ] + mkl_deps() + if_cuda([
+    ] + mkl_deps() + nvpl_deps() + if_cuda([
         ":matmul_util",
         "//tensorflow/compiler/xla/stream_executor/gpu:gpu_asm_opts",
         "//tensorflow/compiler/xla/stream_executor/gpu:redzone_allocator",
@@ -7742,6 +7747,7 @@ tf_cc_shared_library(
         "@local_execution_config_platform//:__subpackages__",
         "@mkl_dnn_acl_compatible//:__subpackages__",
         "@mkl_dnn_v1//:__subpackages__",
+        "@nvpl//:__subpackages__",
         "@nsync//:__subpackages__",
         "@org_sqlite//:__subpackages__",
         "@platforms//:__subpackages__",

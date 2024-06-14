@@ -9,6 +9,10 @@ load(
     "//third_party/mkl:build_defs.bzl",
     "if_mkl",
 )
+load(
+    "//third_party/nvpl:build_defs.bzl",
+    "if_nvpl",
+)
 
 package(
     # copybara:uncomment default_applicable_licenses = ["//tensorflow:license"],

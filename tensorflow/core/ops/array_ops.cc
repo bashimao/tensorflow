@@ -1329,8 +1329,16 @@ REGISTER_OP("_MklIdentity")
     .Output("mkl_output: uint8")
     .Attr("T: type")
     .SetShapeFn(shape_inference::UnchangedShape)
-    .Doc(R"Doc( Mkl implementation of IdentityOp
-)Doc");
+    .Doc(R"Doc( Mkl implementation of IdentityOp )Doc");
+#endif
+
+#ifdef NVIDIA_PL
+REGISTER_OP("_NvplIdentity")
+    .Input("input: T")
+    .Output("output: T")
+    .Attr("T: type")
+    .SetShapeFn(shape_inference::UnchangedShape)
+    .Doc("NVPL implementation of IdentityOp");
 #endif
 
 REGISTER_OP("IdentityN")

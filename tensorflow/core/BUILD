@@ -72,6 +72,7 @@ load(
     "if_nccl",
     "tf_cc_test",
     "tf_cc_test_mkl",
+    "tf_cc_test_nvpl",
     "tf_cc_tests",
     "tf_copts",
     "tf_cuda_library",
@@ -110,6 +111,10 @@ load("@local_config_tensorrt//:build_defs.bzl", "if_tensorrt")
 load(
     "//third_party/mkl:build_defs.bzl",
     "if_mkl",
+)
+load(
+    "//third_party/nvpl:build_defs.bzl",
+    "if_nvpl",
 )
 
 package(
@@ -427,6 +432,8 @@ tf_cuda_library(
         "//tensorflow/tsl/framework:device_type.h",
     ] + if_mkl([
         "//tensorflow/core/util:mkl_util_hdrs",
+    ]) + if_nvpl([
+        "//tensorflow/core/util:nvpl_util_hdrs",
     ]),
     visibility = ["//visibility:public"],
     deps = [
@@ -655,6 +662,9 @@ cc_library(
         "//tensorflow/core/kernels/mkl:mkl_matmul_op",
         "//tensorflow/core/kernels/mkl:mkl_tfconv_op",
         "//tensorflow/core/kernels/mkl:mkl_tmp_bf16_ops",
+    ]) + if_nvpl([
+        "//tensorflow/core/kernels/nvpl:nvpl_identity_op",
+        "//tensorflow/core/kernels/nvpl:nvpl_matmul_op",
     ]) + if_cuda_or_rocm([
         "//tensorflow/core/kernels:cudnn_rnn_kernels",
     ]) + if_cuda([
@@ -1985,6 +1995,38 @@ tf_cc_test_mkl(
         "//tensorflow/core/kernels/mkl:mkl_tfconv_op",
         "//tensorflow/core/kernels/mkl:mkl_transpose_op",
         "//tensorflow/core/kernels/mkl:mkl_tmp_bf16_ops",
+    ]),
+)
+
+tf_cc_test_nvpl(
+    name = "nvpl_related_tests",
+    size = "small",
+    srcs = [
+        "//tensorflow/core/util:nvpl_util_test_srcs",
+    ],
+    linkstatic = 1,
+    deps = [
+        ":core",
+        ":core_cpu",
+        ":core_cpu_internal",
+        ":direct_session_internal",
+        ":framework",
+        ":framework_internal",
+        ":lib",
+        ":lib_internal",
+        ":ops",
+        ":protos_all_cc",
+        ":test",
+        ":test_main",
+        ":testlib",
+        "//tensorflow/cc:cc_ops",
+        "//tensorflow/cc:scope",
+        "//tensorflow/cc:sendrecv_ops",
+        "//tensorflow/core/kernels:ops_util",
+        "//third_party/eigen3",
+    ] + if_nvpl([
+        "//tensorflow/core/kernels/nvpl:nvpl_identity_op",
+        "//tensorflow/core/kernels/nvpl:nvpl_matmul_op",
     ]),
 )
 
