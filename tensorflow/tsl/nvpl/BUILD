@@ -66,7 +66,7 @@ cc_library(
     }),
     visibility = ["//visibility:public"],
     deps = select({
-        clean_dep("//tensorflow/tsl:linux_x86_64"): [
+        clean_dep("//tensorflow/tsl:linux_aarch64"): [
             ":nvpl_libs_linux",
         ],
         "//conditions:default": [],

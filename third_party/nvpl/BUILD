@@ -11,7 +11,7 @@ alias(
 
 alias(
     name = "enable_nvpl",
-    actual = "//tensorflow/tsl/mkl:enable_nvpl",
+    actual = "//tensorflow/tsl/nvpl:enable_nvpl",
 )
 
 alias(
@@ -37,11 +37,18 @@ cc_library(
     ]),
     strip_include_prefix = "include",
     srcs = [
-        "lib/libnvpl_blas_lp64_seq.so.0.2.0",
-        "lib/libnvpl_blas_lp64_seq.so.0",
-        "lib/libnvpl_blas_lp64_seq.so",
+        "lib/libnvpl_blas_core.so.0.2.0",
+        "lib/libnvpl_blas_core.so.0",
+        "lib/libnvpl_blas_lp64_gomp.so.0.2.0",
+        "lib/libnvpl_blas_lp64_gomp.so.0",
     ],
-    linkopts = ["-lrt"],
+    data = [
+        #"lib/libnvpl_blas_lp64_seq.so.0.2.0",
+        #,
+        #"lib/libnvpl_blas_lp64_seq.so",
+    ],
+    #linkopts = ["-lgomp"],
+    linkstatic = 1,
     visibility = ["//visibility:public"],
     deps = [],
 )

@@ -13,6 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
+#include <cstdint>
 #include "tensorflow/tsl/platform/denormal.h"
 
 #include "tensorflow/tsl/platform/cpu_info.h"

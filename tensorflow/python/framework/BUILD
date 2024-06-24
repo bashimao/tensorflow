@@ -18,6 +18,11 @@ load("//tensorflow/python/tpu:tpu.bzl", "tpu_py_test")
 load("//tensorflow/core/platform:build_config.bzl", "pyx_library", "tf_additional_all_protos", "tf_additional_lib_deps", "tf_proto_library", "tf_protos_grappler")  # @unused
 load("//tensorflow/core/platform:build_config_root.bzl", "if_static", "tf_additional_xla_deps_py")
 
+load(
+    "//third_party/nvpl:build_defs.bzl",
+    "if_nvpl",
+)
+
 visibility = [
     "//tensorflow:__subpackages__",
     "//tensorflow/dtensor:dtensor-internal",
@@ -201,7 +206,7 @@ tf_cc_binary(
         "//tensorflow/tsl/platform:types",
         "//tensorflow/tsl/util:command_line_flags",
         "@com_google_absl//absl/strings",
-    ],
+    ] + if_nvpl(["@nvpl//:nvpl"]),
 )
 
 cc_library(
@@ -217,7 +222,7 @@ cc_library(
         "//tensorflow/tsl/platform:strcat",
         "//tensorflow/tsl/platform:types",
         "@com_google_absl//absl/strings",
-    ],
+    ]
 )
 
 tf_cc_test(
@@ -230,7 +235,7 @@ tf_cc_test(
         "//tensorflow/core:test",
         "//tensorflow/core:test_main",
         "@com_google_absl//absl/strings:str_format",
-    ],
+    ]
 )
 
 py_library(

@@ -17,7 +17,10 @@ load(
     "tf_additional_profiler_deps",
 )
 load("//tensorflow/python:build_defs.bzl", "tf_gen_op_wrapper_private_py")
-
+load(
+    "//third_party/nvpl:build_defs.bzl",
+    "if_nvpl",
+)
 # TODO(mdan): Break into per-directory files.
 
 visibility = [
@@ -910,7 +913,7 @@ tf_gen_op_wrapper_private_py(
     name = "training_ops_gen",
     visibility = [
         "//tensorflow/python/training:__pkg__",
-    ],
+    ]
 )
 
 tf_gen_op_wrapper_private_py(

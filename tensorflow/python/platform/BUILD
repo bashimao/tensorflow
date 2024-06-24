@@ -3,6 +3,11 @@
 load("//tensorflow:tensorflow.default.bzl", "pybind_extension", "tf_py_build_info_genrule", "tf_py_test", "tf_python_pybind_extension")
 load("//tensorflow/core/platform:build_config.bzl", "pyx_library", "tf_additional_all_protos", "tf_additional_lib_deps", "tf_proto_library", "tf_protos_grappler")  # @unused
 
+load(
+    "//third_party/nvpl:build_defs.bzl",
+    "if_nvpl",
+)
+
 visibility = [
     "//tensorflow:__subpackages__",
     "//tensorflow/dtensor:dtensor-internal",
@@ -203,7 +208,7 @@ tf_python_pybind_extension(
         "//tensorflow/core/platform:cpu_feature_guard_hdr",  # Only depend on header to avoid ODR issues.
         "//third_party/python_runtime:headers",
         "@pybind11",
-    ],
+    ] + if_nvpl(["@nvpl//:nvpl"]),
 )
 
 py_library(

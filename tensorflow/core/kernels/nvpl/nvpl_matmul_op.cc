@@ -88,7 +88,6 @@ class NvplMatMulOp : public OpKernel {
 
     const enum CBLAS_TRANSPOSE cblas_transa{transa ? CblasTrans : CblasNoTrans};
     const enum CBLAS_TRANSPOSE cblas_transb{transb ? CblasTrans : CblasNoTrans};
-    VLOG(2) << "NVPL DNN SGEMM called";
 
     cblas_sgemm(CblasRowMajor, cblas_transa, cblas_transb, 
                 m, n, k,

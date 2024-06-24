@@ -1857,7 +1857,7 @@ cc_library(
         "//tensorflow/core:protos_all_cc",
     ] + if_mkl([":mkl_cpu_allocator"]) + if_mkl_ml([
         "//third_party/mkl:intel_binary_blob",
-    ]),
+    ]) + if_nvpl(["@nvpl//:nvpl"]),
 )
 
 cc_library(

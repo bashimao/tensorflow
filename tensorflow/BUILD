@@ -61,6 +61,11 @@ load(
 )
 # copybara:comment_end
 
+load(
+    "//third_party/nvpl:build_defs.bzl",
+    "if_nvpl",
+)
+
 PACKAGE_STATIC_DEPS = [
     "//:__subpackages__",
     "@cudnn_frontend_archive//:__subpackages__",

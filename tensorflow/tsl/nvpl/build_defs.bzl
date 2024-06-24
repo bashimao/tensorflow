@@ -15,7 +15,7 @@ def if_nvpl(if_true, if_false = []):
       a select evaluating to either if_true or if_false as appropriate.
     """
     return select({
-        "@org_tensorflow//tensorflow/tsl:linux_x86_64": if_true,
+        "@org_tensorflow//tensorflow/tsl:linux_aarch64": if_true,
         "//conditions:default": if_false,
     })
 
