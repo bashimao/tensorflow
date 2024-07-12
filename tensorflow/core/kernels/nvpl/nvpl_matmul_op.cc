@@ -6,6 +6,7 @@
 #include "tensorflow/core/kernels/fill_functor.h"
 #include "tensorflow/core/kernels/nvpl/nvpl_matmul_ops_common.h"
 #include "nvpl_blas_cblas.h"
+#include "nvpl_blas_service.h"
 #include <iostream>
 
 namespace tensorflow {
@@ -21,6 +22,13 @@ class NvplMatMulOp : public OpKernel {
   void Compute(OpKernelContext* ctx) override {
     const Tensor& a{ctx->input(0)};
     const Tensor& b{ctx->input(1)};
+
+    const auto thread_pool{ctx->device()->tensorflow_cpu_worker_threads()->workers};
+    if (thread_pool != nullptr) {
+      nvpl_blas_set_num_threads_local(thread_pool->NumThreads());
+    } else {
+      nvpl_blas_set_num_threads_local(0);
+    }
 
     // Check that the dimensions of the two matrices are valid.
     OP_REQUIRES(ctx, TensorShapeUtils::IsMatrix(a.shape()),
@@ -101,11 +109,11 @@ class NvplMatMulOp : public OpKernel {
   }
 };
 
-#define REGISTER_NVPL_CPU(T)                                   \
+#define REGISTER_NVPL_CPU(T)                              \
   REGISTER_KERNEL_BUILDER(                                \
       Name("NvplMatMul")                                  \
           .Device(DEVICE_CPU)                             \
-          .TypeConstraint<T>("T"),                         \
+          .TypeConstraint<T>("T"),                        \
       NvplMatMulOp<CPUDevice, T, false>);
 
 TF_CALL_float(REGISTER_NVPL_CPU);
