@@ -176,6 +176,17 @@ REGISTER_OP("_MklBatchMatMulV2")
     .SetShapeFn(shape_inference::BatchMatMulV2Shape);
 #endif  // INTEL_MKL
 
+#ifdef NVIDIA_PL
+REGISTER_OP("NvplBatchMatMul")
+    .Input("x: T")
+    .Input("y: T")
+    .Output("output: T")
+    .Attr("T: {float} = DT_FLOAT")
+    .Attr("adj_x: bool = false")
+    .Attr("adj_y: bool = false")
+    .SetShapeFn(shape_inference::BatchMatMulShape);
+#endif  // NVIDIA_PL
+
 // --------------------------------------------------------------------------
 // Casting Ops
 //

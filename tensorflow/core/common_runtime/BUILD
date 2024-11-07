@@ -3153,6 +3153,7 @@ tf_cc_test_mkl(
     ]) + if_nvpl([
         "//tensorflow/core/kernels/nvpl:nvpl_identity_op",
         "//tensorflow/core/kernels/nvpl:nvpl_matmul_op",
+        "//tensorflow/core/kernels/nvpl:nvpl_batch_matmul_op",
     ]),
 )
 
