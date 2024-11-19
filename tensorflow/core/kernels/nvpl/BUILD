@@ -50,6 +50,16 @@ tf_nvpl_kernel_library(
 )
 
 tf_nvpl_kernel_library(
+    name = "nvpl_batch_matmul_op",
+    srcs = ["nvpl_batch_matmul_op.cc"],
+    hdrs = [
+        "nvpl_matmul_ops_common.h",
+        "nvpl_batch_matmul_helper.h",
+        ],
+    deps = NVPL_DEPS,
+)
+
+tf_nvpl_kernel_library(
     name = "nvpl_identity_op",
     prefix = "nvpl_identity_op",
     deps = NVPL_DEPS,

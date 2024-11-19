@@ -665,6 +665,7 @@ cc_library(
     ]) + if_nvpl([
         "//tensorflow/core/kernels/nvpl:nvpl_identity_op",
         "//tensorflow/core/kernels/nvpl:nvpl_matmul_op",
+        "//tensorflow/core/kernels/nvpl:nvpl_batch_matmul_op",
     ]) + if_cuda_or_rocm([
         "//tensorflow/core/kernels:cudnn_rnn_kernels",
     ]) + if_cuda([
@@ -2027,6 +2028,7 @@ tf_cc_test_nvpl(
     ] + if_nvpl([
         "//tensorflow/core/kernels/nvpl:nvpl_identity_op",
         "//tensorflow/core/kernels/nvpl:nvpl_matmul_op",
+        "//tensorflow/core/kernels/nvpl:nvpl_batch_matmul_op",
     ]),
 )
 
